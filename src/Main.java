@@ -1,45 +1,72 @@
 import java.io.*;
 import java.lang.reflect.Array;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        File folder = new File("C:\\Users\\Z0216921\\files");
-        File[] listOfFiles = folder.listFiles();
-        FileWriter fin = new FileWriter("output.txt");
+        if (args.length != 2) {
+            System.out.println("error");
+        } else {
+            Set<String> listOfFiles = listFilesUsingFileWalkAndVisitor(args[0]);
 
-        for (File file : listOfFiles) {
-            if (file.isDirectory()) {
-                 System.out.println("Name of directory: " + file.getName());
-                 File[] listCurrentFiles = file.listFiles();
-                 for (File currentFile : listCurrentFiles) {
-                     if (currentFile.isFile()) {
-                         FileReader fr = new FileReader(currentFile);
-                         int c;
-                         while ((c= fr.read()) != -1)
-                             fin.write((char) (c));
-                         fr.close();
-
-                     }
-                 }
+            FileWriter out = new FileWriter("output.txt");
+            int c;
+            for (String fileName : listOfFiles) {
+                FileReader in = new FileReader(fileName);
+                while ((c = in.read()) != -1) {
+                    out.write((char) c);
+                }
+                in.close();
             }
-            if (file.isFile()) {
-                FileReader fr = new FileReader(file);
-                int c;
-                while ((c= fr.read()) != -1)
-                    fin.write((char) (c));
-                fr.close();
+            out.close();
+
+            FileReader out2 = new FileReader("output.txt");
+            Scanner scanner = new Scanner(out2);
+            String line = "";
+            String result = "";
+            int count = 0;
+            while (scanner.hasNextLine()) {
+                line = scanner.nextLine();
+                if (line.contains(args[1])) {
+                    count++;
+                    result += String.valueOf(count);
+                    result += "---> ";
+                    result += line;
+                    result += '\n';
+                }
             }
+            out2.close();
+            scanner.close();
+
+            System.out.println(count);
+
+
+            FileWriter in2 = new FileWriter("result.txt");
+            in2.write(result);
+            in2.close();
+
         }
-        fin.close();
-
-
-        if (args.length > 0) {
-
-        }
-
-
     }
+
+    public static Set<String> listFilesUsingFileWalkAndVisitor(String dir) throws IOException {
+        Set<String> fileList = new HashSet<>();
+        Files.walkFileTree(Paths.get(dir), new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                if (!Files.isDirectory(file)) {
+                    fileList.add(file.toAbsolutePath().toString());
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return fileList;
+    }
+
+
 }
