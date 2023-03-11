@@ -9,8 +9,12 @@ public class Searcher {
 
     static boolean outputFileCreated = false;
     static boolean resultFileCreated = false;
+
+    static String extension = "";
     public static void main(String[] args) throws IOException {
 
+        Files.deleteIfExists(Paths.get("output.txt"));
+        Files.deleteIfExists(Paths.get("result.txt"));
         String search = "";
         String path = "";
         int numberOfLinesAfterResult = 1;
@@ -40,6 +44,21 @@ public class Searcher {
                 verbose = false;
             }
         }
+
+        else if (args.length == 5) {
+            search = args[0];
+            path = args[1];
+            numberOfLinesAfterResult = Integer.valueOf(args[2]);
+            if (args[3].equals("-verbose")) {
+                verbose = true;
+            }
+            else {
+                verbose = false;
+            }
+
+            extension = args[4];
+        }
+
         else {
             System.out.println("Usage: java Searcher search_text <path> <number_of_lines_after_result> <-verbose>");
             System.exit(255);
@@ -62,6 +81,7 @@ public class Searcher {
             });
             thread.start();
 
+            
             FileWriter out = new FileWriter("output.txt");
             int c;
             for (String fileName : listOfFiles) {
@@ -116,6 +136,7 @@ public class Searcher {
 
             resultFileCreated = true;
 
+
             System.out.println("\nCreating result.txt");
 
 
@@ -134,7 +155,8 @@ public class Searcher {
         Files.walkFileTree(Paths.get(path), new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                if (!Files.isDirectory(file) && !file.toString().contains(".class")) {
+                if (!Files.isDirectory(file) && !file.toString().contains(".class")
+                && file.toString().contains(extension)) {
                     files.add(file.toAbsolutePath().toString());
                 }
                 return FileVisitResult.CONTINUE;
