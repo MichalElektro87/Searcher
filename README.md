@@ -1,3 +1,3 @@
 # Searcher
 
-Program to search for a specified text in files within a directory. Recursive
+Recursive search for a text within files in a specified directory. 
