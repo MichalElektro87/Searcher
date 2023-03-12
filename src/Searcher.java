@@ -13,8 +13,8 @@ public class Searcher {
     static String extension = "";
     public static void main(String[] args) throws IOException {
 
-        Files.deleteIfExists(Paths.get("output.txt"));
-        Files.deleteIfExists(Paths.get("result.txt"));
+        Files.deleteIfExists(Paths.get("output123Ver1.txt"));
+        Files.deleteIfExists(Paths.get("result123Ver1.txt"));
         String search = "";
         String path = "";
         int numberOfLinesAfterResult = 1;
@@ -61,11 +61,12 @@ public class Searcher {
 
         else {
             System.out.println("Usage: java Searcher search_text <path> <number_of_lines_after_result> <-verbose>");
+            System.out.println("Min usage: java Searcher search_text");
             System.exit(255);
         }
 
             Set<String> listOfFiles = listFiles(path);
-            System.out.print("Creating output.txt");
+            System.out.print("Creating output123Ver1.txt");
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -82,7 +83,7 @@ public class Searcher {
             thread.start();
 
             
-            FileWriter out = new FileWriter("output.txt");
+            FileWriter out = new FileWriter("output123Ver1.txt");
             int c;
             for (String fileName : listOfFiles) {
                 FileReader in = new FileReader(fileName);
@@ -94,6 +95,7 @@ public class Searcher {
             out.close();
             outputFileCreated = true;
 
+            System.out.print("\nCreating result123Ver1.txt");
             Thread thread2 = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -109,7 +111,7 @@ public class Searcher {
             });
             thread2.start();
 
-            FileReader out2 = new FileReader("output.txt");
+            FileReader out2 = new FileReader("output123Ver1.txt");
             Scanner scanner = new Scanner(out2);
             String line = "";
             String result = "";
@@ -137,10 +139,7 @@ public class Searcher {
             resultFileCreated = true;
 
 
-            System.out.println("\nCreating result.txt");
-
-
-            FileWriter in2 = new FileWriter("result.txt");
+            FileWriter in2 = new FileWriter("result123Ver1.txt");
             in2.write(result);
             in2.close();
 
@@ -159,6 +158,7 @@ public class Searcher {
                 && file.toString().contains(extension)) {
                     files.add(file.toAbsolutePath().toString());
                 }
+
                 return FileVisitResult.CONTINUE;
             }
         });
