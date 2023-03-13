@@ -4,7 +4,7 @@
 ## Usage:
 
 ```shell
-java Searcher search_text <path> <number_of_lines_after_result> <-verbose> <extention>
+java Searcher search_text [path] [number_of_lines_after_result] [-verbose] [extention]
 ```
 ## Min usage:
 
